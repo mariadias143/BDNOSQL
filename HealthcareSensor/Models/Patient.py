@@ -1,3 +1,5 @@
+from datetime import date
+
 class Patient:
     def __init__(self, patientid,name,birthdate,age,sensorid):
         self.patientid = patientid
@@ -20,3 +22,9 @@ class Patient:
 
     def getSensorId(self):
         return self.sensorid
+
+    def insertQuery(self):
+        return ("INSERT INTO Patient VALUES (%s,%s,%s,%s,%s)")
+    
+    def data(self):
+        return (self.patientid,self.name,self.birthdate,self.age,self.sensorid)

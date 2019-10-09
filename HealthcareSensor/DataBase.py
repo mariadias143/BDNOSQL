@@ -16,4 +16,15 @@ class DataBase:
                                            password=self.password,
                                            host=host,
                                            database=database,
+                                           auth_plugin='mysql_native_password'
                                            )
+
+    def insert(self,object):
+        self.open()
+
+        cursor = self.con.cursor()
+        cursor.execute(object.insertQuery(),object.data())
+
+        self.con.commit()
+        cursor.close()
+        self.close()
