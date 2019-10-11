@@ -48,7 +48,7 @@ ENGINE = InnoDB;
 -- Table `HealthcareSensors`.`Biometrics`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `HealthcareSensors`.`Biometrics` (
-  `biometricsid` INT NOT NULL,
+  `biometricsid` INT NOT NULL AUTO_INCREMENT,
   `bodytemp` INT NOT NULL,
   `systolic` INT NOT NULL,
   `diastolic` INT NOT NULL,
