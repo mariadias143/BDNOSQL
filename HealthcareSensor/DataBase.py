@@ -1,4 +1,5 @@
 import mysql.connector
+from Models.Biometrics import Biometrics
 
 host = '127.0.0.1'
 database = 'HealthcareSensors'
@@ -39,3 +40,28 @@ class DataBase:
         cursor.close()
         self.close()
         return count == 0
+
+    def getBiometrics(self,userId):
+        self.open()
+        cursor = self.con.cursor(buffered=True)
+
+        querie = ("Select B.bodytemp,B.systolic,B.diastolic,B.bpm,B.timestamp,B.sensorid FROM Biometrics as B, Patient as P , Sensor as S WHERE P.patientid = %s AND P.sensorid = S.sensorid AND B.sensorid = S.sensorid"
+                )
+        
+        cursor.execute(querie,(userId,))
+
+        bios = []
+
+        for row in cursor:
+            b = Biometrics(row[0],
+                           row[1],
+                           row[2],
+                           row[3],
+                           row[4],
+                           row[5])
+            bios.append(b)
+        
+        cursor.close()
+        self.close()
+        return bios
+    
