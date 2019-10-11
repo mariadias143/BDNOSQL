@@ -29,8 +29,8 @@ def fetchAll(*args):
 def parse_json(dic):
     sid = dic['sensorid']
     snum = dic['sensornum']
-    type = dic['type_of_sensor']
-    sensor = Sensor(sid, snum, type)
+    tos = dic['type_of_sensor']
+    sensor = Sensor(sid, snum, tos)
 
     pid = dic['patient']['patientid']
     pname = dic['patient']['patientname']
