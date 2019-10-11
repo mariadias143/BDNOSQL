@@ -28,3 +28,14 @@ class DataBase:
         self.con.commit()
         cursor.close()
         self.close()
+
+    def verify(self,object):
+        self.open()
+
+        cursor = self.con.cursor(buffered=True)
+        cursor.execute(object.verifyQuery(),(object.getId(),))
+        
+        count = cursor.rowcount
+        cursor.close()
+        self.close()
+        return count == 0

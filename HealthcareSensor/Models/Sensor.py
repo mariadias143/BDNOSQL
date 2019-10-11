@@ -3,9 +3,15 @@ class Sensor:
         self.sensorid = sensorid
         self.sensornum = sensornum
         self.type = typec
+    
+    def getId(self):
+        return self.sensorid
 
     def insertQuery(self):
         return ("INSERT INTO Sensor VALUES (%s,%s,%s)")
+
+    def verifyQuery(self):
+        return ("SELECT * FROM Sensor WHERE sensorid = %s")
     
     def data(self):
         return (self.sensorid,self.sensornum,self.type)

@@ -8,7 +8,7 @@ class Patient:
         self.age = age
         self.sensorid = sensorid
 
-    def getPatientId(self):
+    def getId(self):
         return self.patientid
     
     def getName(self):
@@ -25,6 +25,9 @@ class Patient:
 
     def insertQuery(self):
         return ("INSERT INTO Patient VALUES (%s,%s,%s,%s,%s)")
+
+    def verifyQuery(self):
+        return ("SELECT * FROM Patient WHERE patientid = %s")
     
     def data(self):
         return (self.patientid,self.name,self.birthdate,self.age,self.sensorid)
