@@ -49,17 +49,10 @@ def parse_json(dic):
 
 
 def main():
-    global sensor 
-    global patient
-    global biometrics
-    global db
-
     db = DataBase('root','root')
 
     dados = []
     dados = fetchAll()
-
-    db.open()
 
     for dic in dados:
         sensor, patient, biometrics = parse_json(dic)  
@@ -68,8 +61,6 @@ def main():
         if (db.verify(patient)):
             db.insert(patient)
         db.insert(biometrics) 
-
-    db.close()
 
 
 if __name__ == "__main__":
