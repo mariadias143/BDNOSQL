@@ -30,3 +30,6 @@ class Biometrics:
     
     def data(self):
         return (self.bodytemp,self.systolic,self.diastolic,self.bpm,self.timestamp,self.sensorid)
+    
+    def logs(self):
+        print(f"Inseri dados biometricos do sensor {self.sensorid} a {self.timestamp}")

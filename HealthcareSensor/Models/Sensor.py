@@ -15,3 +15,6 @@ class Sensor:
     
     def data(self):
         return (self.sensorid,self.sensornum,self.type)
+    
+    def logs(self):
+        print(f"Inseri o sensor com id {self.sensorid}")

@@ -31,3 +31,6 @@ class Patient:
     
     def data(self):
         return (self.patientid,self.name,self.birthdate,self.age,self.sensorid)
+    
+    def logs(self):
+        print(f"Inseri paciente com id {self.patientid}")

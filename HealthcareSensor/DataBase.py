@@ -29,6 +29,7 @@ class DataBase:
         self.con.commit()
         cursor.close()
         self.close()
+        object.logs()
 
     def verify(self,object):
         self.open()

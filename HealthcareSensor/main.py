@@ -6,6 +6,14 @@ from Models.Sensor import Sensor
 from DataBase import DataBase
 import requests as req
 import json
+import time
+
+from getopt import getopt
+opts, resto = getopt(sys.argv[1:],"s:t:")
+dop = dict(opts)
+
+sec_between = int(dop.get('-s',5))
+total_time = int(dop.get('-t',999))
 
 
 def fetch_json(id):
@@ -49,18 +57,30 @@ def parse_json(dic):
 
 
 def main():
-    db = DataBase('root','root')
+    db = DataBase('root','carroz98')
 
     dados = []
     dados = fetchAll()
 
-    for dic in dados:
-        sensor, patient, biometrics = parse_json(dic)  
-        if (db.verify(sensor)):
-            db.insert(sensor)
-        if (db.verify(patient)):
-            db.insert(patient)
-        db.insert(biometrics) 
+    global sec_between
+    global total_time
+
+    if (sec_between > total_time):
+        total_time = sec_between
+    
+    sec_spent = 0
+
+    while sec_spent < total_time:
+        dados = fetchAll()
+        for dic in dados:
+            sensor, patient, biometrics = parse_json(dic)  
+            if (db.verify(sensor)):
+                db.insert(sensor)
+            if (db.verify(patient)):
+                db.insert(patient)
+            db.insert(biometrics)
+        time.sleep(sec_between)
+        sec_spent += sec_between 
 
 
 if __name__ == "__main__":
