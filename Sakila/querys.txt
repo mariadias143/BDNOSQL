@@ -1,3 +1,25 @@
 Queries que vamos responder:
 
-1- 
+1-Quantos filmes fez cada ator (lista ordenada por ordem descrescente)
+
+Mongo
+db.film.aggregate([{$unwind:"$actors"},{$group:{_id: "$actors",numFilmes:{$sum:1}}},{$sort:{numFilmes:-1}}]) 
+
+
+
+2-Lista dos atores com os filmes em que participaram (query de inversao estrutural)
+
+Mongo
+db.film.aggregate([{$unwind: "$actors"},{$group:{_id:"$actors","films":{"$push": {"title" : "$title", "description" : "$description"}},numFilm:{$sum:1}}},{$sort : {_id:1}}]).pretty()
+
+
+3- Dado um ator saber quais os filmes em que participou(e.g CARMEN HUNT)
+Mongo
+db.film.aggregate([{$unwind: "$actors"},{$match:{actors:"CARMEN HUNT"}},{$group:{_id:"$actors","films":{"$push": {"title" : "$title", "description" : "$description"}},numFilm:{$sum:1}}},{$sort : {_id:1}}]).pretty()
+
+
+
+
+
+
+
