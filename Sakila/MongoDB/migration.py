@@ -1,13 +1,20 @@
 from DataBases.SqlConnector import SqlDataBase
+from Models.film import insertFilms
+from Models.store import insertStores
+from pymongo import MongoClient
+
+
 
 def main():
-    db = SqlDataBase('root','carroz98')
+    client = MongoClient("mongodb://localhost:27017/")
+    dbMongo = client.Sakila
+    dbSQL = SqlDataBase('root','password')
+    
+    insertFilms(dbSQL,dbMongo)
+    insertStores(dbSQL,dbMongo)
 
-    table = db.tablequery('SELECT * from customer, address, city, country where customer.address_id = address.address_id  AND address.city_id = city.city_id AND city.country_id = country.country_id')
+ 
 
-    print(len(table))
-
-    return
 
 if __name__ == "__main__":
     main()

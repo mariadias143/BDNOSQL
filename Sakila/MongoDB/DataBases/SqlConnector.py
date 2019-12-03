@@ -34,3 +34,18 @@ class SqlDataBase:
         self.close()
         return table
     
+    def queryWithArgs(self,querie,args):
+        self.open()
+        cursor = self.con.cursor(buffered=True)
+        cursor.execute(querie,(args,))
+        response = []
+
+        for row in cursor:
+            response.append(row)
+
+        cursor.close()
+        self.close()
+        return response
+    
+    
+    
