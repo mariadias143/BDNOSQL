@@ -37,7 +37,7 @@ class SqlDataBase:
     def queryWithArgs(self,querie,args):
         self.open()
         cursor = self.con.cursor(buffered=True)
-        cursor.execute(querie,(args,))
+        cursor.execute(querie,args)
         response = []
 
         for row in cursor:

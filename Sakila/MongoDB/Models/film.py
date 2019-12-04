@@ -65,9 +65,9 @@ def insertFilms(dbSQL,dbMongo):
     table = dbSQL.tablequery(queryFilm)
     for row in table:
         id_film=str(row[0])
-        category = dbSQL.queryWithArgs(queryCategory,id_film)
-        language = dbSQL.queryWithArgs(queryLanguage,id_film)
-        actors = dbSQL.queryWithArgs(queryActor,id_film)
+        category = dbSQL.queryWithArgs(queryCategory,(id_film,))
+        language = dbSQL.queryWithArgs(queryLanguage,(id_film,))
+        actors = dbSQL.queryWithArgs(queryActor,(id_film,))
         film = Film(row[0],row[1],row[2],row[3],row[6],row[7],row[8],row[9],row[10],row[11],row[12],category,language,actors)
         mydict = film.dictonary()
         dbMongo.film.insert_one(mydict)

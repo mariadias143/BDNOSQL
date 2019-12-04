@@ -17,6 +17,23 @@ db.film.aggregate([{$unwind: "$actors"},{$group:{_id:"$actors","films":{"$push":
 Mongo
 db.film.aggregate([{$unwind: "$actors"},{$match:{actors:"CARMEN HUNT"}},{$group:{_id:"$actors","films":{"$push": {"title" : "$title", "description" : "$description"}},numFilm:{$sum:1}}},{$sort : {_id:1}}]).pretty()
 
+4-Lista dos atores com as categoras dos filmes em que participaram 
+Mongo
+db.film.aggregate([{$unwind: "$actors"},{$unwind: "$category"},{$group:{_id:"$actors","categoria" :{"$addToSet": {"nome": "$category"}}}}]).pretty()
+
+
+5- lista de lojas e numero de filmes(inventario) que tem
+Mongo
+db.store.aggregate([{$unwind: "$films"},{$group:{_id:"$_id",numFilms:{$sum:"$films.inventario"}}}])
+
+6- lista de filmes por categoria
+Mongo
+db.film.aggregate([{$unwind: "$category"},{$group:{_id:"$category","films":{"$push": {"title" : "$title", "description" : "$description"}},numFilm:{$sum:1}}},{$sort : {_id:1}}]).pretty()
+
+
+7- lista de staff de uma loja ( filtrar por address)
+db.store.find({"address":"47 MySakila Drive"},{"staff":1}).pretty()
+
 
 
 
