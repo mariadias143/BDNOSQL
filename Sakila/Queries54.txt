@@ -1,0 +1,5 @@
+Filmes alugados por um utilizador.
+Montante gasto por um utilizador num dado periodo de tempo.
+Filmes mais alugados.
+Filmes mais rentáveis.
+Categoria mais vista por um utilizador.

@@ -7,6 +7,7 @@ class SqlDataBase:
     def __init__(self,user,password):
         self.user = user
         self.password = password
+        self.open()
 
     def close(self):
         self.con.close()
@@ -20,7 +21,6 @@ class SqlDataBase:
                                            )
 
     def tablequery(self,querie):
-        self.open()
         cursor = self.con.cursor(buffered=True)
 
         cursor.execute(querie)
@@ -31,11 +31,9 @@ class SqlDataBase:
             table.append(row)
         
         cursor.close()
-        self.close()
         return table
     
     def queryWithArgs(self,querie,args):
-        self.open()
         cursor = self.con.cursor(buffered=True)
         cursor.execute(querie,args)
         response = []
@@ -44,7 +42,6 @@ class SqlDataBase:
             response.append(row)
 
         cursor.close()
-        self.close()
         return response
     
     
