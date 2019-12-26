@@ -1,0 +1,6 @@
+1. No Neo4J Desktop fazer Start da Base de Dados e depois carregar em Manage
+2. Carregar na seta ao lado de Open Folder e depois no Import e copiar para essa pasta os ficheiros CSV
+3. Abrir o Browser
+4. Em Browser Settings clickar no Enable multi statement 
+5. Copiar para o editor de querys o que está no ficheiro nodos.cql e correr 
+--> demora um bocado, para não ficar tão lento podeis fazer aos bocados
