@@ -1,5 +1,16 @@
 Filmes alugados por um utilizador.
+
+db.payments.find({"user.customer_id" : id_a_procurar},{"rental.film":1}).pretty()
+
 Montante gasto por um utilizador num dado periodo de tempo.
+db.payments.aggregate([{$match:{ $and: [ {payment_date:{$lte:"2005-07-29 03:58:49",$gte:"2005-07-28 19:20:07"}},{"user.customer_id": 1}]}},{ $group: { _id : null, sum : { $sum: "$amount" } } }])
+
 Filmes mais alugados.
+db.payments.aggregate([{$group:{ _id : "$rental.film.title", count : { $sum: 1 }}},{$sort : {count : -1}},{$limit : 10 }])
+
 Filmes mais rentáveis.
-Categoria mais vista por um utilizador.
+db.payments.aggregate([{$group:{ _id : "$rental.film.title", count : { $sum: "$amount" }}},{$sort : {count : -1}},{$limit : 10 }])
+
+Categorias mais vistas por um utilizador.
+db.payments.aggregate([{$match:{"user.customer_id": 1}},{$unwind: "$rental.film.categories"},{$group: {"_id": "$rental.film.categories" , "count": { $sum: 1}}},{$sort : {count : -1}},{$limit : 5 }])
+
