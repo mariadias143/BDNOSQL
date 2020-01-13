@@ -38,9 +38,6 @@ WITH cm, collect(distinct(r.item)) AS filmsList
 RETURN (cm.first_name + " " + cm.last_name) AS Customer, filmsList as Watched_Films;
 
 
-//Montante gasto por um utilizador num dado periodo de tempo 
-//nao consigo fazer cenas com as datas
-
 //Montante gasto por cada utilizador
 MATCH(p:payment)-[:related_to]->(r:rental)-[:rented_by]->(cm:customer)
 WITH cm, collect(p.amount) AS sales
@@ -52,7 +49,8 @@ ORDER BY AMOUNT_SPENT DESC;
 MATCH(r:rental)
 WITH r, collect(distinct(r.item)) AS rents
 RETURN r.item AS Film, count(rents) AS nrRentals
-ORDER BY nrRentals DESC;
+ORDER BY nrRentals DESC
+LIMIT 10;
 
 //Filmes mais rentáveis
 MATCH(p:payment)-[:related_to]->(r:rental)
@@ -61,11 +59,11 @@ UNWIND sales AS s
 RETURN r.item AS Film, sum(s) AS Sales
 ORDER BY Sales DESC;
 
-//Categoria mais vista por um utilizador, e.g. SARAH LEWIS
+//Categorias mais vista por um utilizador, e.g. SARAH LEWIS
 MATCH(r:rental)-[:rented_by]->(cm:customer{first_name:'SARAH',last_name:'LEWIS'})
 MATCH(f:film)-[:categorized_in]->(cat:category)
 WHERE f.title = r.item
 WITH cat, collect(cat.name) AS ctgs
 RETURN head(ctgs) AS Most_Watched_Category, size(ctgs) AS NrRentals
 ORDER BY NrRentals DESC
-LIMIT 1;
+LIMIT 5;
