@@ -11,29 +11,61 @@ ORDER BY Actor ASC;
 
 //Dado um ator saber quais os filmes em que participou(e.g CARMEN HUNT)
 MATCH(a:actor{first_name:'CARMEN',last_name:'HUNT'})-[r:acted_in]->(f:film)
-RETURN f.title AS Title, f.description AS Description, f.category AS Category;
+RETURN f.title AS Title, f.description AS Description;
 
-//Lista dos atores com as categoras dos filmes em que participaram -- uhm meh bue parecido ao outro
-MATCH(a:actor)-[r:acted_in]->(f:film)
-WITH a, collect(distinct(f.category)) AS catsActor
-RETURN catsActor AS Categories, (a.first_name + " " + a.last_name) AS Actor;
+//Lista dos atores com as categorias dos filmes em que participaram
+MATCH(a:actor)-[:acted_in]->(f:film)-[:categorized_in]->(cat:category)
+WITH a, collect(cat.name) AS catsActor
+RETURN (a.first_name + " " + a.last_name) AS Actor catsActor AS Categories;
+
+//Lista de lojas e número de filmes (inventário) que tem
+MATCH(f:film)-[r:available_at]->(s:store)
+RETURN s.store_id AS Store, sum(r.quantity) AS Inventory;
+
+//Lista de filmes por categoria
+MATCH(f:film)-[:categorized_in]->(cat:category)
+WITH cat,collect(f.title) AS filmsList
+RETURN distinct(cat.name) AS Category, filmsList AS Movies
+
+//Lista do staff das lojas
+MATCH(s:staff)-[:works_at]->(st:store)-[:located_in]->(ad:address)
+WITH st, ad, collect(s.first_name + " " + s.last_name) AS listStaff
+RETURN st.store_id AS ID, ad.address AS Location, listStaff AS Staff
+
+//Filmes alugados por cada utilizador
+MATCH(r:rental)-[:rented_by]->(cm:customer)
+WITH cm, collect(distinct(r.item)) AS filmsList
+RETURN (cm.first_name + " " + cm.last_name) AS Customer, filmsList as Watched_Films;
 
 
-//Top sales per film
+//Montante gasto por um utilizador num dado periodo de tempo 
+//nao consigo fazer cenas com as datas
+
+//Montante gasto por cada utilizador
+MATCH(p:payment)-[:related_to]->(r:rental)-[:rented_by]->(cm:customer)
+WITH cm, collect(p.amount) AS sales
+UNWIND sales AS s
+RETURN (cm.first_name + " " + cm.last_name) AS Customer, sum(s) as AMOUNT_SPENT
+ORDER BY AMOUNT_SPENT DESC;
+
+//Filmes mais alugados
+MATCH(r:rental)
+WITH r, collect(distinct(r.item)) AS rents
+RETURN r.item AS Film, count(rents) AS nrRentals
+ORDER BY nrRentals DESC;
+
+//Filmes mais rentáveis
 MATCH(p:payment)-[:related_to]->(r:rental)
 WITH r, collect(p.amount) AS sales
 UNWIND sales AS s
 RETURN r.item AS Film, sum(s) AS Sales
 ORDER BY Sales DESC;
 
-//Top sales per customer
-MATCH(p:payment)-[:related_to]->(r:rental)-[:rented_by]->(cm:customer)
-WITH cm, collect(p.amount) AS sales
-UNWIND sales AS s
-RETURN cm.first_name + " " + cm.last_name AS Customer, sum(s) as AMOUNT_SPENT
-ORDER BY AMOUNT_SPENT DESC;
-
-//Filmes alugados por cada utilizador --meh
-MATCH(r:rental)-[:rented_by]->(cm:customer)
-WITH cm, collect(distinct(r.item)) AS filmsList
-RETURN cm.first_name + " " + cm.last_name AS Customer, filmsList as Watched_Films;
+//Categoria mais vista por um utilizador, e.g. SARAH LEWIS
+MATCH(r:rental)-[:rented_by]->(cm:customer{first_name:'SARAH',last_name:'LEWIS'})
+MATCH(f:film)-[:categorized_in]->(cat:category)
+WHERE f.title = r.item
+WITH cat, collect(cat.name) AS ctgs
+RETURN head(ctgs) AS Most_Watched_Category, size(ctgs) AS NrRentals
+ORDER BY NrRentals DESC
+LIMIT 1;

@@ -47,6 +47,7 @@ LOAD CSV WITH HEADERS FROM "file:///category.csv" AS line
 CREATE (cat:category {category_id: toInteger(line.category_id),
 name: line.name});
 
+
 //Language Node
 CREATE CONSTRAINT ON (l:language) ASSERT l.language_id IS UNIQUE;
 USING PERIODIC COMMIT
@@ -64,7 +65,6 @@ title: line.title,
 description: line.description,
 release_year: toInteger(line.release_year),
 language: l.name,
-category: 'None',
 rental_duration: toInteger(line.rental_duration),
 rental_rate: toFloat(line.rental_rate),
 length: toInteger(line.length),
@@ -72,27 +72,23 @@ replacement_cost: toFloat(line.replacement_cost),
 rating: line.rating,
 special_features: line.special_features});
 
-//Delete Language Nodes
+//Delete Language Node
 MATCH (l:language)
 DETACH DELETE l;
 
-//Relationship N:M between film and actor
+//Relationship N:M between Film and Actor
 USING PERIODIC COMMIT
 LOAD CSV WITH HEADERS FROM "file:///film_actor.csv" AS line
 MATCH(f:film {film_id: toInteger(line.film_id)})
 MATCH(a:actor {actor_id: toInteger(line.actor_id)})
 MERGE (a)-[:acted_in]->(f);
 
-//Update category property on Film Node
+//Create relationship between the Film and Category Nodes
 USING PERIODIC COMMIT
 LOAD CSV WITH HEADERS FROM "file:///film_category.csv" AS line
 MATCH(f:film {film_id: toInteger(line.film_id)})
 MATCH(cat:category {category_id: toInteger(line.category_id)})
-SET f.category = cat.name;
-
-//Delete Category Node
-MATCH (cat:category)
-DETACH DELETE cat;
+MERGE(f)-[:categorized_in]->(cat);
 
 //Store Node
 CREATE CONSTRAINT ON (s:store) ASSERT s.store_id IS UNIQUE;
