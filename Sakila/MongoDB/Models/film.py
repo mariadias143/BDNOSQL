@@ -6,9 +6,8 @@ queryActor = "select a.first_name,a.last_name from film_actor fl, actor a where 
 
 
 class Film:
-    def __init__(self,film_id,title,description,release_year,rental_duration,rental_rate,length,
+    def __init__(self,title,description,release_year,rental_duration,rental_rate,length,
     replacement_cost,rating,special_features,last_update,category,language,actors):
-        self.film_id = film_id
         self.title = title
         self.description = description
         self.release_year = release_year
@@ -24,8 +23,6 @@ class Film:
         self.actors = actors
 
 
-    def getFilm_id(self):
-        return self.film_id
 
     def getActors(self):
         return self.actors    
@@ -45,7 +42,6 @@ class Film:
     
     def dictonary(self):
        dic = dict()
-       dic["film_id"]=self.film_id
        dic["title"]=self.title
        dic["description"]=self.description
        dic["release_year"]=str(self.release_year)
@@ -68,7 +64,7 @@ def insertFilms(dbSQL,dbMongo):
         category = dbSQL.queryWithArgs(queryCategory,(id_film,))
         language = dbSQL.queryWithArgs(queryLanguage,(id_film,))
         actors = dbSQL.queryWithArgs(queryActor,(id_film,))
-        film = Film(row[0],row[1],row[2],row[3],row[6],row[7],row[8],row[9],row[10],row[11],row[12],category,language,actors)
+        film = Film(row[1],row[2],row[3],row[6],row[7],row[8],row[9],row[10],row[11],row[12],category,language,actors)
         mydict = film.dictonary()
         dbMongo.film.insert_one(mydict)
 
